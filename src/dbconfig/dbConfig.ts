@@ -1,14 +1,24 @@
 import mongoose from 'mongoose';
 
-const connectToDatabase = async (): Promise<void> => {
+export async function connect() {
     try {
-        const dbUri = process.env.MONGO_URI !
-        await mongoose.connect(dbUri);
-        console.log('Connected to the database successfully');
-    } catch (error) {
-        console.error('Error connecting to the database:', error);
-        process.exit(1); // Exit process with failure
-    }
-};
+        mongoose.connect(process.env.MONGO_URI!);
+        const connection = mongoose.connection;
 
-export default connectToDatabase;
+        connection.on('connected', () => {
+            console.log('MongoDB connected successfully');
+        })
+
+        connection.on('error', (err) => {
+            console.log('MongoDB connection error. Please make sure MongoDB is running. ' + err);
+            process.exit();
+        })
+
+    } catch (error) {
+        console.log('Something goes wrong!');
+        console.log(error);
+        
+    }
+
+
+}

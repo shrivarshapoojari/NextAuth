@@ -18,12 +18,12 @@ export async function POST(request: NextRequest){
         if(!user){
             return NextResponse.json({error: "User does not exist"}, {status: 400})
         }
-        console.log("user exists");
-        
+       
         
         //check if password is correct
         const validPassword = await bcryptjs.compare(password, user.password)
         if(!validPassword){
+            console.log("Invalid password");
             return NextResponse.json({error: "Invalid password"}, {status: 400})
         }
         console.log(user);
